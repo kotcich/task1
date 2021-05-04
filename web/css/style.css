@@ -1,0 +1,60 @@
+main {
+    margin-top: 70px;
+}
+
+.wrapper {
+    width: 50%;
+    position: absolute;
+    top: 75px;
+    right: 250px;
+}
+
+.for_btn {
+    width: 100%;
+    display: flex;
+
+    margin-bottom: 35px;
+}
+
+#menu_btn, #role_btn {
+    background-color: white;
+    width: 250px;
+    border: 3px solid gray;
+    border-radius: 3px;
+    padding: 12px;
+}
+
+#menu_btn {
+    margin-right: 30px;
+}
+
+#table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 100px;
+}
+
+td, th {
+    width: 33%;
+    border: 1px solid gray;
+    padding: 45px 0;
+    text-align: center;
+}
+
+.change {
+    background-color: white;
+    border: 2px solid gray;
+    border-radius: 3px;
+    padding: 10px 50px;
+}
+
+.change:hover {
+    color: white;
+    background-color: gray;
+}
+
+.values {
+    display: block;
+    text-decoration: underline;
+    margin: 7px 0;
+}
