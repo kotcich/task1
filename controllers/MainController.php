@@ -49,7 +49,7 @@ class MainController extends Controller
         if ($request->isGet) {
             $arr  = Menu::find()->with('roles')->asArray()->where('status!=-1')->all();
 
-            $table = '<tr><th>Роль пользователя</th><th>Пункт меню</th><th></th></tr>';
+            $table = '<tr><th>Пункт меню</th><th>Привязанные роли</th><th></th></tr>';
 
             foreach ($arr as $elem) {
                 $table .= '<tr><td>' . $elem['title'] . '</td><td>';
@@ -72,7 +72,7 @@ class MainController extends Controller
         if ($request->isGet) {
             $arr  = Role::find()->with('menus')->asArray()->where('status!=-1')->all();
 
-            $table = '<tr><th>Пункт меню</th><th>Привязанные роли</th><th></th></tr>';
+            $table = '<tr><th>Роль пользователя</th><th>Пункты меню</th><th></th></tr>';
 
             foreach ($arr as $elem) {
                 $table .= '<tr><td>' . $elem['title'] . '</td><td>';
