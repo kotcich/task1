@@ -42,4 +42,9 @@ class Role extends ActiveRecord
         return $this->hasMany(Menu::className(), ['id' => 'menu_id'])
             ->viaTable('menu_role', ['role_id' => 'id']);
     }
+
+    public function getMenu_role()
+    {
+        return $this->hasMany(Menu_role::className(), ['role_id' => 'id'])->where('status=1');
+    }
 }

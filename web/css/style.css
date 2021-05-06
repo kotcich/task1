@@ -1,4 +1,4 @@
-main {
+#main {
     margin-top: 70px;
 }
 
@@ -9,6 +9,7 @@ main {
     right: 250px;
 }
 
+/*Wrapper для кнопок над таблицей*/
 .for_btn {
     width: 100%;
     display: flex;
@@ -16,6 +17,7 @@ main {
     margin-bottom: 35px;
 }
 
+/*Кнопки над таблицей*/
 #menu_btn, #role_btn {
     background-color: white;
     width: 250px;
@@ -28,10 +30,11 @@ main {
     margin-right: 30px;
 }
 
-#table {
+#menu_table, #role_table  {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 100px;
+    display: none;
 }
 
 td, th {
@@ -41,6 +44,7 @@ td, th {
     text-align: center;
 }
 
+/*Кнопка изменить*/
 .change {
     background-color: white;
     border: 2px solid gray;
@@ -53,8 +57,96 @@ td, th {
     background-color: gray;
 }
 
+/*Значения второга стобца таблицы(и роли и менюшки)*/
 .values {
     display: block;
     text-decoration: underline;
     margin: 7px 0;
+}
+
+#menu_form_wrapper {
+    display: none;
+    width: 35%;
+    z-index: 2;
+    background-color: white;
+    border: 1px solid black;
+
+    position: fixed;
+    top: 125px;
+    left: 32%;
+}
+
+/*Форма для изменения пункта меню*/
+#change_menu_form {
+    padding: 10px;
+    margin-top: -25px;
+}
+
+/* Кнопка отмены */
+#cancel {
+    color: white;
+    width: 40%;
+    background-color: gray;
+    text-align: center;
+
+    border: 2px solid gray;
+    border-radius: 3px;
+    padding: 12px 0;
+    cursor: pointer;
+
+    float: right;
+}
+
+/*Кнопка сохранить в форме*/
+#save {
+    color: white;
+    width: 40%;
+    background-color: gray;
+
+    border: 2px solid gray;
+    border-radius: 3px;
+    padding: 12px 0;
+}
+
+/*Заголовок формы*/
+#menu_title_form {
+    font-size: 16px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    padding: 5px 0;
+    border-bottom: 1px solid black;
+}
+
+/*  Блок кнопок/связей  */
+#menu_buttons {
+    height: 200px;
+    overflow-y: auto;
+
+    padding: 10px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/*Кнопки в формах для выбора связей*/
+.edit {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid black;
+    text-align: center;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.edit_set {
+    background-color: gray;
+    color: white;
+}
+
+.edit_unset {
+    background-color: white;
+    color: black;
 }

@@ -25,7 +25,6 @@ class Menu extends ActiveRecord
     public function rules()
     {
         return [
-//          [['created_at', 'updated_at', 'status', 'id', 'menu_id'], 'safe'],
             ['title', 'required', 'message' => 'Обязательно к заполнению'],
             ['title', 'trim'],
         ];
@@ -41,6 +40,8 @@ class Menu extends ActiveRecord
     public function getRoles()
     {
         return $this->hasMany(Role::className(), ['id' => 'role_id'])
-            ->viaTable('menu_role', ['menu_id' => 'id']);
+            ->viaTable('menu_role', ['menu_id' => 'id'], function ($query) {
+                $query->andWhere('status=1');
+            });
     }
 }
