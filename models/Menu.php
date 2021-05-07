@@ -44,4 +44,9 @@ class Menu extends ActiveRecord
                 $query->andWhere('status=1');
             });
     }
+
+    public function getMenu_role()
+    {
+        return $this->hasMany(Menu_role::className(), ['menu_id' => 'id'])->where('status=1');
+    }
 }

@@ -62,14 +62,14 @@ class MainController extends Controller
             $table = '<tr><th>Роль пользователя</th><th>Пункты меню</th><th></th></tr>';
 
             foreach ($arr as $elem) {
-                $table .= '<tr><td>' . $elem['title'] . '</td><td>';
+                $table .= "<tr><td>{$elem['title']}</td><td>";
 
                 foreach ($elem['menus'] as $menu) {
-                    $table .=  '<span class = \'values\'>' . $menu['title'] . '</span>';
+                    $table .= "<span class = 'values'>{$menu['title']}</span>";
                 }
 
-                $table .= "</td><td><input type= 'submit' class = 'change' value = 'изменить' 
-                           data-id = \"{$elem['id']}\"></td></tr>";
+                $table .= "</td><td><input type= 'submit' class = 'change change_role_btn' value = 'изменить' 
+                           data-id = '{$elem['id']}' data-title = '{$elem['title']}'></td></tr>";
             }
 
             return json_encode($table);
@@ -92,17 +92,52 @@ class MainController extends Controller
                 foreach ($elem['menu_role'] as $item) {
                     if ($item['menu_id'] == $request->get('id')) {
                         $set = true;
+                        break;
                     }
                 }
 
                 if ($set === true) {
                     $buttons .= "<span class = 'edit edit_set'
-                      data-id = '". $elem['id'] ."' data-edit = '1'>{$elem['title']}</span><br>";
+                      data-id = '{$elem['id']}' data-edit = '1'>{$elem['title']}</span><br>";
                 } else {
                     $buttons .= "<span class = 'edit edit_unset'
-                      data-id = '". $elem['id'] ."' data-edit = '0'>{$elem['title']}</span><br>";
+                      data-id = '{$elem['id']}' data-edit = '0'>{$elem['title']}</span><br>";
                 }
             }
+
+            return json_encode($buttons);
+        }
+    }
+
+    // Вывод менюшек в видео кнопок для формы
+    public function actionAllMenus()
+    {
+        $request = Yii::$app->request;
+
+        if ($request->get()) {
+            $buttons = '';
+            $arr     = Menu::find()->with('menu_role')->asArray()->all();  // Получаю все роли и их связи
+
+            // Формирую кнопки
+            foreach ($arr as $elem) {
+                $set = false;
+
+                foreach ($elem['menu_role'] as $item) {
+                    if ($item['role_id'] == $request->get('id')) {
+                        $set = true;
+                        break;
+                    }
+                }
+
+                if ($set === true) {
+                    $buttons .= "<span class = 'edit edit_set'
+                      data-id = '{$elem['id']}' data-edit = '1'>{$elem['title']}</span><br>";
+                } else {
+                    $buttons .= "<span class = 'edit edit_unset'
+                      data-id = '{$elem['id']}' data-edit = '0'>{$elem['title']}</span><br>";
+                }
+            }
+
             return json_encode($buttons);
         }
     }
@@ -164,7 +199,69 @@ class MainController extends Controller
                 }
             }
 
-            return $this->actionShowMenu();  // Формирую таблицу
+            $response = [json_decode($this->actionShowMenu()), json_decode($this->actionShowRole())];
+            return json_encode($response);  // Формирую таблицу
+        }
+    }
+
+    public function actionUpdateRole()
+    {
+        $request  = Yii::$app->request;
+        $roles_id = [];
+
+        if($request->get()) {
+            $role       = Role::find()->where(['title' => $request->get('title')])->one();
+            $id         = $role->id;
+            $menu_roles = Menu_role::find()->where(['role_id' => $id])->all();
+
+            // Меняю title, если его изменили
+            if ($request->get('title') != $request->get('titleNew')) {
+                $role->title = $request->get('titleNew');
+                $role->save();
+            }
+
+            // Если есть связь, но она мягко удалена, то меняю ее статус
+            foreach ($menu_roles as $menu_role) {
+                if ($request->get('nums')) {
+                    $nums = explode(',', $request->get('nums'));
+
+                    // Востанавливаю связь, после мягко удаления
+                    foreach ($nums as $num) {
+                        if ($menu_role->status == -1 and $num == $menu_role->menu_id) {
+                            $menu_role->status = 1;
+                            $menu_role->save();
+                            break;
+                        }
+                    }
+
+                    // Мягко удаляю существующую связь
+                    if ($menu_role->status == 1 and !in_array($menu_role->menu_id, $nums)) {
+                        $menu_role->status = -1;
+                        $menu_role->save();
+                    }
+                } else {
+                    // Если в GET nums нет элементов, значит мягко удалить все существующие связи с менюшкой
+                    $menu_role->status = -1;
+                    $menu_role->save();
+                }
+
+                $menus_id[] = $menu_role->menu_id;
+            }
+
+            // Создание связи, если ее нет
+            if ($request->get('nums')) {
+                foreach ($nums as $index) {
+                    if (!in_array($index, $menus_id)) {
+                        $new_menu_role = new Menu_role();
+                        $new_menu_role->role_id = $id;
+                        $new_menu_role->menu_id = $index;
+                        $new_menu_role->save();
+                    }
+                }
+            }
+
+            $response = [json_decode($this->actionShowRole()), json_decode($this->actionShowMenu())];
+            return json_encode($response);  // Формирую таблицу
         }
     }
 }

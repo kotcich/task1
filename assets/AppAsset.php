@@ -23,7 +23,9 @@ class AppAsset extends AssetBundle
         '/css/style.css',
     ];
     public $js = [
-        '/js/script.js',
+        '/js/switchTables.js',
+        '/js/menu_change.js',
+        '/js/role_change.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

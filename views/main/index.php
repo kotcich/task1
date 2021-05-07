@@ -8,28 +8,44 @@ $this->registerJsFile('/js/sctipt.js');
 <main id = 'main'>
     <div class = 'wrapper'>
 
-        <div class = 'for_btn'>
+        <p class = 'for_btn'>
             <?= Html::submitButton('Пункты меню', ['id' => 'menu_btn']) ?>
             <?= Html::submitButton('Роли', ['id' => 'role_btn']) ?>
-        </div>
+        </p>
 
         <table id = 'menu_table'><?= $menu_table ?></table>
         <table id = 'role_table'><?= $role_table ?></table>
     </div>
 </main>
 
-<div id = 'menu_form_wrapper'>
-    <p><b id = 'menu_title_form'></b></p>
+<div id = 'menu_change_form_wrapper'>
+    <p><b id = 'menu_change_title_form'></b></p>
 
     <?php $form = ActiveForm::begin(['id' => 'change_menu_form', 'method' => 'get']) ?>
+    <?= $form->field($menu, 'title')->textInput(['id' => 'menu_change_title_input']) ?>
 
-    <?= $form->field($menu, 'title')->textInput(['id' => 'menu_title_input']) ?>
+    <div id = 'menu_change_buttons'></div>
+    <span id = 'menu_change_all'>Выбрать все</span>
 
-    <div id = 'menu_buttons'></div>
+    <div>
+        <?= Html::submitButton('Сохранить', ['id' => 'save_change_menu']) ?>
+        <span id = 'cancel_change_menu'>Отмена</span>
+    </div>
+    <?php ActiveForm::end() ?>
+</div>
 
-    <?= Html::submitButton('Сохранить', ['id' => 'save']) ?>
+<div id = 'role_change_form_wrapper'>
+    <p><b id = 'role_change_title_form'></b></p>
 
-    <span id = 'cancel'>Отмена</span>
+    <?php $form = ActiveForm::begin(['id' => 'change_role_form', 'method' => 'get']) ?>
+    <?= $form->field($role, 'title')->textInput(['id' => 'role_change_title_input']) ?>
 
+    <div id = 'role_change_buttons'></div>
+    <span id = 'role_change_all'>Выбрать все</span>
+
+    <div>
+        <?= Html::submitButton('Сохранить', ['id' => 'save_change_role']) ?>
+        <span id = 'cancel_change_role'>Отмена</span>
+    </div>
     <?php ActiveForm::end() ?>
 </div>
