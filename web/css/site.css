@@ -145,6 +145,7 @@ a.desc:after {
 {
     width: 90%;
     margin: 5px 5%;
+    display: none;
 }
 
 #modal-select
