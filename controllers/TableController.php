@@ -80,7 +80,19 @@ class TableController extends Controller
                 $tree = Role::find()->where(['title' => $request->get('title')])->with('menus')->asArray()->all();
 
                 foreach ($tree[0]['menus'] as $menu) {
-                    $ul .= "<li>{$menu['title']}</li>";
+                    $sub_tree = Menu::find()->select('title')->asArray()->where(['menu_id' => $menu['id']])->all();
+
+                    if ($sub_tree) {
+                        $ul .= "<li>{$menu['title']}<ul id = 'sub_tree'>";
+
+                        foreach ($sub_tree as $sub) {
+                            $ul .= "<li>{$sub['title']}</li>";
+                        }
+
+                        $ul .= '</ul></li>';
+                    } else {
+                        $ul .= "<li>{$menu['title']}</li>";
+                    }
                 }
             }
         }
