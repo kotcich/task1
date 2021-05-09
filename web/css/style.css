@@ -9,6 +9,41 @@
     right: 250px;
 }
 
+#for_selector {
+    width: 300px;
+    position: absolute;
+    top: 0;
+    left: -57.5%;
+}
+
+#select {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+#table {
+    margin-bottom: 30px;
+}
+
+ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    width: 100%;
+    border: 1px solid black;
+}
+
+li {
+    list-style-type: none;
+    padding: 5px;
+}
+
+li:not(:last-child) {
+    border-bottom: 1px solid black;
+}
+
 /*Wrapper для кнопок над таблицей*/
 .for_btn {
     width: 100%;
@@ -30,18 +65,25 @@
     margin-right: 30px;
 }
 
-#menu_table, #role_table  {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 100px;
-    display: none;
-}
-
 td, th {
-    width: 33%;
+    width: 20%;
     border: 1px solid gray;
     padding: 45px 0;
     text-align: center;
+}
+
+#tree_name {
+    color: white;
+    width: 100%;
+    background-color: gray;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+#sub_tree {
+    border: none;
+    padding-left: 20px;
 }
 
 /*Кнопка изменить*/
@@ -64,26 +106,22 @@ td, th {
     margin: 7px 0;
 }
 
-#menu_change_form_wrapper, #role_change_form_wrapper {
+#form {
     display: none;
     width: 35%;
     z-index: 2;
     background-color: white;
     border: 1px solid black;
+    padding: 10px;
 
     position: fixed;
     top: 100px;
     left: 32%;
-}
-
-/*Форма для изменения пункта меню*/
-#change_menu_form, #change_role_form {
     padding: 10px;
-    margin-top: -25px;
 }
 
 /* Кнопка отмены */
-#cancel_change_menu, #cancel_change_role {
+#cancel {
     color: white;
     width: 40%;
     background-color: gray;
@@ -98,7 +136,7 @@ td, th {
 }
 
 /*Кнопка сохранить в форме*/
-#save_change_menu, #save_change_role {
+#save {
     color: white;
     width: 40%;
     background-color: gray;
@@ -108,8 +146,20 @@ td, th {
     padding: 12px 0;
 }
 
+#create_menu, #create_role {
+    color: white;
+    background-color: gray;
+    padding: 10px 20px;
+    border-radius: 3px;
+    outline: none;
+
+    position: fixed;
+    right: 1%;
+    top: 50%;
+}
+
 /*Заголовок формы*/
-#menu_change_title_form, #role_change_title_form {
+#form_name {
     font-size: 16px;
     width: 100%;
     display: inline-block;
@@ -118,9 +168,16 @@ td, th {
     border-bottom: 1px solid black;
 }
 
+#form_title {
+    width: 100%;
+    color: gray;
+    padding: 5px;
+    margin-bottom: 7px;
+}
+
 /*  Блок кнопок/связей  */
-#menu_change_buttons, #role_change_buttons {
-    height: 250px;
+#form_buttons {
+    height: 200px;
     overflow-y: auto;
 
     padding: 10px;
@@ -132,7 +189,7 @@ td, th {
 }
 
 /*Выбрать все для менюшек*/
-#menu_change_all, #role_change_all {
+#all {
     display: inline-block;
     width: 100%;
     text-align: center;
@@ -140,16 +197,22 @@ td, th {
 
 
     margin-top: 5px;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     padding: 5px 0;
 
     border: 1px solid gray;
     border-radius: 3px;
 }
 
-#menu_change_all:hover, #role_change_all:hover {
+#all:hover {
     color: white;
     background-color: gray;
+}
+
+#parents {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 5px;
 }
 
 /*Кнопки в формах для выбора связей*/

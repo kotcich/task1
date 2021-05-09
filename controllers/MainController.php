@@ -4,79 +4,32 @@
 namespace app\controllers;
 
 
+use app\controllers\TableController;
 use app\models\Menu;
 use app\models\Menu_role;
 use app\models\Role;
-use yii\web\Controller;
-use Yii;
 use yii\web\Request;
+use Yii;
 
-class MainController extends Controller
+class MainController extends TableController
 {
-    public $layout   = 'basic';
+    public $layout = 'basic';
 
     public function actionIndex()
     {
-        $this->view->title = 'Админка';
+        $roles  = Role::find()->select('title')->asArray()->where('status=1')->all();
+        $select = "<select id = 'select' onchange = 'tree(this)'><option>Роль</option>";
 
-        $request    = Yii::$app->request;
-        $menu       = new Menu();
-        $role       = new Role();
-        $menu_table = json_decode($this->actionShowMenu());
-        $role_table = json_decode($this->actionShowRole());
-
-        return $this->render('index', compact(['menu', 'role', 'menu_table', 'role_table']));
-    }
-
-    // Формирование таблицы менюшек
-    public function actionShowMenu()
-    {
-        $request = Yii::$app->request;
-
-        $arr  = Menu::find()->with('roles')->select(['id', 'title'])->asArray()->where('status=1')->all();
-
-        $table = '<tr><th>Пункт меню</th><th>Привязанные роли</th><th></th></tr>';
-
-        foreach ($arr as $elem) {
-            $table .= "<tr><td>{$elem['title']}</td><td>";
-
-            foreach ($elem['roles'] as $role) {
-                $table .=  "<span class = 'values'>{$role['title']}</span>";
-            }
-
-            $table .= "</td><td><input type= 'submit' class = 'change change_menu_btn' value = 'изменить' 
-                          data-id = '{$elem['id']}' data-title = '{$elem['title']}'></td></tr>";
+        foreach ($roles as $role) {
+            $select .= "<option>{$role['title']}</option>";
         }
 
-        return json_encode($table);
+        $select .= '</select>';
+
+        return $this->render('index', compact('select'));
     }
 
-    // Формирование таблицы ролей
-    public function actionShowRole()
-    {
-        $request = Yii::$app->request;
-
-        if ($request->isGet) {
-            $arr  = Role::find()->with('menus')->select(['id', 'title'])->asArray()->where('status=1')->all();
-
-            $table = '<tr><th>Роль пользователя</th><th>Пункты меню</th><th></th></tr>';
-
-            foreach ($arr as $elem) {
-                $table .= "<tr><td>{$elem['title']}</td><td>";
-
-                foreach ($elem['menus'] as $menu) {
-                    $table .= "<span class = 'values'>{$menu['title']}</span>";
-                }
-
-                $table .= "</td><td><input type= 'submit' class = 'change change_role_btn' value = 'изменить' 
-                           data-id = '{$elem['id']}' data-title = '{$elem['title']}'></td></tr>";
-            }
-
-            return json_encode($table);
-        }
-    }
-
-    // Вывод ролей в видео кнопок для формы
+    // Вывод ролей в виде кнопок для формы
     public function actionAllRoles()
     {
         $request = Yii::$app->request;
@@ -98,10 +51,10 @@ class MainController extends Controller
 
                 if ($set === true) {
                     $buttons .= "<span class = 'edit edit_set'
-                      data-id = '{$elem['id']}' data-edit = '1'>{$elem['title']}</span><br>";
+                      data-id = '{$elem['id']}' data-edit = '1' onclick = 'set(this)'>{$elem['title']}</span><br>";
                 } else {
                     $buttons .= "<span class = 'edit edit_unset'
-                      data-id = '{$elem['id']}' data-edit = '0'>{$elem['title']}</span><br>";
+                      data-id = '{$elem['id']}' data-edit = '0' onclick = 'set(this)'>{$elem['title']}</span><br>";
                 }
             }
 
@@ -130,10 +83,10 @@ class MainController extends Controller
                 }
 
                 if ($set === true) {
-                    $buttons .= "<span class = 'edit edit_set'
+                    $buttons .= "<span class = 'edit edit_set' onclick = 'set(this)'
                       data-id = '{$elem['id']}' data-edit = '1'>{$elem['title']}</span><br>";
                 } else {
-                    $buttons .= "<span class = 'edit edit_unset'
+                    $buttons .= "<span class = 'edit edit_unset' onclick = 'set(this)'
                       data-id = '{$elem['id']}' data-edit = '0'>{$elem['title']}</span><br>";
                 }
             }
@@ -156,8 +109,15 @@ class MainController extends Controller
             // Меняю title, если его изменили
             if ($request->get('title') != $request->get('titleNew')) {
                 $menu->title = $request->get('titleNew');
-                $menu->save();
             }
+
+            // Назначаю родителя менюшки
+            if ($request->get('parent')) {
+                $menu_id = Menu::find()->select('id')->where(['title' => $request->get('parent')])->asArray()->one();
+                $menu->menu_id = $menu_id['id'];
+            }
+
+            $menu->save();
 
             // Если есть связь, но она мягко удалена, то меняю ее статус
             foreach ($menu_roles as $menu_role) {
@@ -189,21 +149,24 @@ class MainController extends Controller
 
             // Создание связи, если ее нет
             if ($request->get('nums')) {
+                $nums = explode(',', $request->get('nums'));
+
                 foreach ($nums as $index) {
                     if (!in_array($index, $roles_id)) {
                         $new_menu_role = new Menu_role();
                         $new_menu_role->menu_id = $id;
                         $new_menu_role->role_id = $index;
+                        $new_menu_role->status  = 1;
                         $new_menu_role->save();
                     }
                 }
             }
 
-            $response = [json_decode($this->actionShowMenu()), json_decode($this->actionShowRole())];
-            return json_encode($response);  // Формирую таблицу
+            return parent::actionShowMenu();  // Формирую таблицу
         }
     }
 
+    // Изменяю связи c Ролью
     public function actionUpdateRole()
     {
         $request  = Yii::$app->request;
@@ -250,6 +213,8 @@ class MainController extends Controller
 
             // Создание связи, если ее нет
             if ($request->get('nums')) {
+                $nums = explode(',', $request->get('nums'));
+
                 foreach ($nums as $index) {
                     if (!in_array($index, $menus_id)) {
                         $new_menu_role = new Menu_role();
@@ -260,8 +225,65 @@ class MainController extends Controller
                 }
             }
 
-            $response = [json_decode($this->actionShowRole()), json_decode($this->actionShowMenu())];
-            return json_encode($response);  // Формирую таблицу
+            return parent::actionShowRole();  // Формирую таблицу
         }
+    }
+
+    // Создаю менюшку
+    public function actionCreateMenu()
+    {
+        $request = Yii::$app->request;
+
+        if ($request->get()) {
+            $menu        = new Menu();
+            $menu->title = $request->get('title');
+
+            if ($request->get('parent')) {
+                $id = Menu::find()->select('id')->where(['title' => $request->get('parent')])->asArray()->all();
+                $menu->menu_id = $id[0]['id'];
+            }
+
+            $menu->save();
+
+            if ($request->get('nums')) {
+                $nums = explode(',', $request->get('nums'));
+
+                foreach ($nums as $num) {
+                    $link = new Menu_role();
+                    $link->menu_id = $menu->id;
+                    $link->role_id = $num;
+                    $link->status  = 1;
+                    $link->save();
+                }
+            }
+        }
+
+        return parent::actionShowMenu();
+    }
+
+    // Создаю роль
+    public function actionCreateRole()
+    {
+        $request = Yii::$app->request;
+
+        if ($request->get()) {
+            $role        = new Role();
+            $role->title = $request->get('title');
+            $role->save();
+
+            if ($request->get('nums')) {
+                $nums = explode(',', $request->get('nums'));
+
+                foreach ($nums as $num) {
+                    $link = new Menu_role();
+                    $link->role_id = $role->id;
+                    $link->menu_id = $num;
+                    $link->status  = 1;
+                    $link->save();
+                }
+            }
+        }
+
+        return parent::actionShowRole();
     }
 }

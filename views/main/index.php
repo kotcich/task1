@@ -7,45 +7,33 @@ $this->registerJsFile('/js/sctipt.js');
 
 <main id = 'main'>
     <div class = 'wrapper'>
+        <div id = 'for_selector'>
+            <?= $select ?>
+            <span id = 'tree_name' style = 'display: none;'></span>
+            <ul id = 'tree' style = 'display: none;'></ul>
+        </div>
 
         <p class = 'for_btn'>
-            <?= Html::submitButton('Пункты меню', ['id' => 'menu_btn']) ?>
-            <?= Html::submitButton('Роли', ['id' => 'role_btn']) ?>
+            <?= Html::submitButton('Пункты меню', ['id' => 'menu_btn', 'onclick' => 'showMenu()']) ?>
+            <?= Html::submitButton('Роли', ['id' => 'role_btn', 'onclick' => 'showRole()']) ?>
         </p>
 
-        <table id = 'menu_table'><?= $menu_table ?></table>
-        <table id = 'role_table'><?= $role_table ?></table>
+        <table id = 'table'></table>
+        <input type = 'submit' id = 'create_menu' style = 'display: none' onclick = 'openCreateMenu()' value = 'Создать пункт меню'>
+        <input type = 'submit' id = 'create_role' style = 'display: none' onclick = 'openCreateRole()' value = 'Создать роль'>
     </div>
 </main>
 
-<div id = 'menu_change_form_wrapper'>
-    <p><b id = 'menu_change_title_form'></b></p>
+<div id = 'form' style="display: none;">
+    <p><b id = 'form_name'></b></p>
+    <input id = 'form_title'>
 
-    <?php $form = ActiveForm::begin(['id' => 'change_menu_form', 'method' => 'get']) ?>
-    <?= $form->field($menu, 'title')->textInput(['id' => 'menu_change_title_input']) ?>
-
-    <div id = 'menu_change_buttons'></div>
-    <span id = 'menu_change_all'>Выбрать все</span>
-
-    <div>
-        <?= Html::submitButton('Сохранить', ['id' => 'save_change_menu']) ?>
-        <span id = 'cancel_change_menu'>Отмена</span>
-    </div>
-    <?php ActiveForm::end() ?>
-</div>
-
-<div id = 'role_change_form_wrapper'>
-    <p><b id = 'role_change_title_form'></b></p>
-
-    <?php $form = ActiveForm::begin(['id' => 'change_role_form', 'method' => 'get']) ?>
-    <?= $form->field($role, 'title')->textInput(['id' => 'role_change_title_input']) ?>
-
-    <div id = 'role_change_buttons'></div>
-    <span id = 'role_change_all'>Выбрать все</span>
+    <div id = 'form_buttons'></div>
+    <span id = 'all' onclick = 'setAll()'>Выбрать все</span>
+    <select id = 'parents'></select>
 
     <div>
-        <?= Html::submitButton('Сохранить', ['id' => 'save_change_role']) ?>
-        <span id = 'cancel_change_role'>Отмена</span>
+        <input type="submit" id = 'save' value = 'Сохранить'>
+        <span id = 'cancel' onclick = 'cancelForm()'>Отмена</span>
     </div>
-    <?php ActiveForm::end() ?>
 </div>
