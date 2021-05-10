@@ -18,7 +18,7 @@ class MainController extends TableController
     public function actionIndex()
     {
         $roles  = Role::find()->select('title')->asArray()->where('status=1')->all();
-        $select = "<select id = 'select' onchange = 'tree(this)'><option>Роль</option>";
+        $select = "<select id = 'select' onclick = 'tree(this)'><option>Роль</option>";
 
         foreach ($roles as $role) {
             $select .= "<option>{$role['title']}</option>";
@@ -112,9 +112,12 @@ class MainController extends TableController
             }
 
             // Назначаю родителя менюшки
-            if ($request->get('parent')) {
+            if ($request->get('parent') and $request->get('parent') != 'Нет') {
                 $menu_id = Menu::find()->select('id')->where(['title' => $request->get('parent')])->asArray()->one();
                 $menu->menu_id = $menu_id['id'];
+            } else {
+                $id = Menu::find()->select('id')->where(['title' => $request->get('parent')])->asArray()->all();
+                $menu->menu_id = 0;
             }
 
             $menu->save();
@@ -238,9 +241,12 @@ class MainController extends TableController
             $menu        = new Menu();
             $menu->title = $request->get('title');
 
-            if ($request->get('parent')) {
+            if ($request->get('parent') and $request->get('parent') != 'Нет') {
                 $id = Menu::find()->select('id')->where(['title' => $request->get('parent')])->asArray()->all();
                 $menu->menu_id = $id[0]['id'];
+            } else {
+                $id = Menu::find()->select('id')->where(['title' => $request->get('parent')])->asArray()->all();
+                $menu->menu_id = 0;
             }
 
             $menu->save();

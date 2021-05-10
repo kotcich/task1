@@ -1,7 +1,5 @@
 <?php
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-//$this->registerJsFile('https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js', ['position' => $this::POS_HEAD]);
 $this->registerJsFile('/js/sctipt.js');
 ?>
 

@@ -10,6 +10,7 @@ use Yii;
 
 class TableController extends Controller
 {
+    // Таблица менюшек
     public function actionShowMenu()
     {
         $arr = Menu::find()->with('roles')->select(['id', 'title'])->asArray()->where('status=1')->all();
@@ -30,6 +31,7 @@ class TableController extends Controller
         return json_encode($table);
     }
 
+    // Таблица ролей
     public function actionShowRole()
     {
         $arr = Role::find()->with('menus')->select(['id', 'title'])->asArray()->where('status=1')->all();
@@ -58,7 +60,7 @@ class TableController extends Controller
         if ($request->get()) {
             $ul   = '';
 
-            if ($request->get('title') == 'Роль') {
+            if ($request->get('title') == 'Роль') {  // Все роли и их менюшки с детьми
                 $tree = Menu::find()->select(['id', 'title'])->asArray()->where('status=1')->all();
 
                 foreach ($tree as $menu) {
@@ -76,7 +78,7 @@ class TableController extends Controller
                         $ul .= "<li>{$menu['title']}</li>";
                     }
                 }
-            } else {
+            } else {  // Конкретная роль и ее менюшки с детьми
                 $tree = Role::find()->where(['title' => $request->get('title')])->with('menus')->asArray()->all();
 
                 foreach ($tree[0]['menus'] as $menu) {
@@ -106,7 +108,16 @@ class TableController extends Controller
         $request = Yii::$app->request;
 
         if ($request->get()) {
-            $options = '';
+            $menu_id = Menu::find()->select('menu_id')->where(['title' => $request->get('child')])
+                ->asArray()->all();
+            $link = Menu::find()->select(['id', 'title'])->where(['id' => $menu_id[0]['menu_id']])->asArray()->all();
+
+            // Ставлю первой опцией имеющегося родителя менюшки, если она есть
+            if ($link) {
+                $options = "<option data-id = '{$link[0]['id']}'>{$link[0]['title']}</option></option><option>Нет</option>";
+            } else {
+                $options = '<option>Нет</option>';
+            }
 
             if ($request->get('child') == 'нет') {
                 $parents = Menu::find()->select(['id', 'title'])->where('status=1')->asArray()->all();

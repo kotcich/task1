@@ -7,8 +7,8 @@ let cancel       = document.querySelector('#cancel');
 let all          = document.querySelector('#all');
 let create_menu  = document.querySelector('#create_menu');
 let create_role  = document.querySelector('#create_role');
-let parents      = document.querySelector('#parents');
-var nums         = [];
+let parents      = document.querySelector('#parents');  // значения в селекте для формы у менюшек
+var nums         = [];  // Массива для отправки выбранных связей
 
 // Открываю форму для меню
 function openFormMenu(elem)
@@ -44,9 +44,7 @@ function openCreateMenu()
     form_name.innerHTML = 'Новый пункт меню'; form_title.value    = '';
     save.setAttribute('onclick', 'createMenu()');
     fetch('/?r=table/parents&child=' + 'нет').then(res => {return res.json()}).then(data => {parents.innerHTML = data});
-    fetch('/?r=main/all-roles').then(response => {return response.json()}).then(data => {
-        form_buttons.innerHTML = data;
-    });
+    fetch('/?r=main/all-roles').then(response => {return response.json()}).then(data => {form_buttons.innerHTML = data});
 }
 
 // Открываю форму для меню

@@ -15,21 +15,6 @@ class Menu extends ActiveRecord
         return '';
     }
 
-    public function attributeLabels()
-    {
-        return [
-            'title' => '',
-        ];
-    }
-
-    public function rules()
-    {
-        return [
-            ['title', 'required', 'message' => 'Обязательно к заполнению'],
-            ['title', 'trim'],
-        ];
-    }
-
     public function behaviors()
     {
         return [
