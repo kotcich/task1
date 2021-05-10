@@ -28,7 +28,7 @@ $this->registerJsFile('/js/sctipt.js');
 
     <div id = 'form_buttons'></div>
     <span id = 'all' onclick = 'setAll()'>Выбрать все</span>
-    <select id = 'parents'></select>
+    <select id = 'parents' style = 'display: none;'></select>
 
     <div>
         <input type="submit" id = 'save' value = 'Сохранить'>

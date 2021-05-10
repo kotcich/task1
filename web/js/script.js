@@ -14,7 +14,7 @@ var nums         = [];  // Массива для отправки выбранн
 function openFormMenu(elem)
 {
     form.style.display  = 'block'; main.style.opacity = '.3'; nums = []; // Обнуляю выбронные значения
-    form_name.innerHTML = elem.dataset.title; form_title.value = elem.dataset.title;
+    form_name.innerHTML = elem.dataset.title; form_title.value = elem.dataset.title; parents.style.display = 'block';
     save.setAttribute('onclick', 'updateMenu()');
     fetch('/?r=table/parents&child=' + form_name.innerHTML).then(res => {return res.json()}).then(data => {parents.innerHTML = data});
     fetch('/?r=main/all-roles&id=' + elem.dataset.id).then(response => {return response.json()}).then(data => {
@@ -41,7 +41,7 @@ function openFormRole(elem)
 function openCreateMenu()
 {
     form.style.display  = 'block'; main.style.opacity = '.3'; nums = []; // Обнуляю выбронные значения
-    form_name.innerHTML = 'Новый пункт меню'; form_title.value    = '';
+    form_name.innerHTML = 'Новый пункт меню'; form_title.value    = ''; parents.style.display = 'block';
     save.setAttribute('onclick', 'createMenu()');
     fetch('/?r=table/parents&child=' + 'нет').then(res => {return res.json()}).then(data => {parents.innerHTML = data});
     fetch('/?r=main/all-roles').then(response => {return response.json()}).then(data => {form_buttons.innerHTML = data});
@@ -60,7 +60,7 @@ function openCreateRole()
 
 function cancelForm()
 {
-    form.style.display = 'none'; form_buttons.innerHTML = ''; main.style.opacity = '1';
+    form.style.display = 'none'; form_buttons.innerHTML = ''; main.style.opacity = '1'; parents.style.display = 'none';
 }
 
 // Меняю связи
@@ -88,7 +88,7 @@ function updateMenu()
 {
     fetch('/?r=main/update-menu&titleNew=' + form_title.value + '&nums=' + nums + '&title=' + form_name.innerHTML +
         '&parent=' + parents.value).then(response => {return response.json()}).then(data => {
-            table.innerHTML = data; form.style.display = 'none'; main.style.opacity = '1';
+            table.innerHTML = data; form.style.display = 'none'; main.style.opacity = '1'; parents.style.display = 'none';
     });
 }
 
@@ -103,7 +103,8 @@ function updateRole()
 function createMenu()
 {
     fetch('/?r=main/create-menu&title=' + form_title.value  + '&nums=' + nums + '&parent=' + parents.value).
-    then(res => {return res.json()}).then(data=> { table.innerHTML = data; form.style.display = 'none'; main.style.opacity = '1'; });
+    then(res => {return res.json()}).then(data=> { table.innerHTML = data; form.style.display = 'none';
+    main.style.opacity = '1'; parents.style.display = 'none'; });
 }
 
 function createRole()
