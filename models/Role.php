@@ -39,6 +39,11 @@ class Role extends ActiveRecord
         return($this->find()->all());
     }
 
+    public function getRole($id)
+    {
+        return($this->find()->where(["id" => $id])->all());
+    }
+
     public function update($runValidation = true, $attributeNames = NULL){
 
     }
